@@ -1,0 +1,20 @@
+[
+  {
+    "nome": "bbb",
+    "data": "2000-29-40",
+    "local": "cola",
+    "capacidadeMaxima": 20,
+    "id": "cc5b47d4-6e54-423d-84a8-3b07c0084d35",
+    "participantesAtuais": 0,
+    "status": "cancelado"
+  },
+  {
+    "nome": "AA",
+    "data": "2000-20-12",
+    "local": "la",
+    "capacidadeMaxima": 200,
+    "id": "896d24f1-033d-4d5c-9a44-0475f3ffd424",
+    "participantesAtuais": 1,
+    "status": "agendado"
+  }
+]

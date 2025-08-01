@@ -28,8 +28,8 @@ export class EventController {
         case 'update':
           await this.updateEvent();
           break;
-        case 'cancel':
-          await this.cancelEvent();
+        case 'changeStatus':
+          await this.changeEventStatus();
           break;
         case 'register':
           await this.registerParticipant();
@@ -54,7 +54,7 @@ export class EventController {
     );
 
     if (isDuplicate) {
-      this.eventView.displayError('Erro: Já existe um evento com o mesmo nome e data.');
+      this.eventView.displayError('Já existe um evento com o mesmo nome e data.');
       return;
     }
 
@@ -105,16 +105,24 @@ export class EventController {
     this.eventView.displayMessage("Evento atualizado com sucesso!");
   }
 
-  private async cancelEvent(): Promise<void> {
+  private async changeEventStatus(): Promise<void> {
     const events = await this.eventService.readEvents();
-    const eventId = await this.eventView.selectEvent(events.filter(e => e.status === 'agendado'));
+    const eventId = await this.eventView.selectEvent(events);
     if (!eventId) return;
 
     const eventIndex = events.findIndex(e => e.id === eventId);
     if (eventIndex !== -1) {
-      events[eventIndex].status = 'cancelado';
+      const oldStatus = events[eventIndex].status
+      this.eventView.displayMessage(`O status atual é: ${oldStatus}`)
+      const newStatus = await this.eventView.getNewStatus();
+      if (newStatus == oldStatus) {
+        this.eventView.displayError("O evento ja possui esse status!");
+        return
+      }
+      events[eventIndex].status = newStatus;
       await this.eventService.writeEvents(events);
-      this.eventView.displayMessage("Evento cancelado com sucesso!");
+
+      this.eventView.displayMessage("Evento alterado com sucesso!");
     } else {
       this.eventView.displayError("Evento não encontrado.");
     }

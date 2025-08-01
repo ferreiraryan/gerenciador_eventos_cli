@@ -1,7 +1,7 @@
 // src/views/EventView.ts
 
 import inquirer from 'inquirer';
-import { Evento } from '../models/Evento';
+import { Evento, StatusEvento } from '../models/Evento';
 
 export class EventView {
 
@@ -16,8 +16,27 @@ export class EventView {
           { name: 'Listar Todos os Eventos', value: 'list' },
           { name: 'Buscar Eventos (por nome ou local)', value: 'search' },
           { name: 'Atualizar Evento', value: 'update' },
-          { name: 'Cancelar Evento', value: 'cancel' },
+          { name: 'Atualizar status Evento', value: 'changeStatus' },
           { name: 'Registrar Participante', value: 'register' },
+          new inquirer.Separator(),
+          { name: 'Sair', value: 'exit' },
+        ],
+      },
+    ]);
+    return option;
+  }
+
+  async getNewStatus(): Promise<StatusEvento> {
+    const { option } = await inquirer.prompt<{ option: StatusEvento }>([
+      {
+        type: 'list',
+        name: 'option',
+        message: 'Selecione o novo status',
+        //'agendado' | 'cancelado' | 'concluido';
+        choices: [
+          { name: 'Mudar para concluido', value: 'concluido' },
+          { name: 'Mudar para agendado', value: 'agendado' },
+          { name: 'Mudar para cancelado', value: 'cancelado' },
           new inquirer.Separator(),
           { name: 'Sair', value: 'exit' },
         ],
@@ -83,10 +102,10 @@ export class EventView {
   }
 
   displayMessage(message: string): void {
-    console.log(`\n✅ ${message}\n`);
+    console.log(`\n ${message}\n`);
   }
 
   displayError(message: string): void {
-    console.error(`\n❌ ${message}\n`);
+    console.error(`\n ${message}\n`);
   }
 }
